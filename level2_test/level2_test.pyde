@@ -19,11 +19,14 @@ class Person():
                 item_caught = level2.falling_clothes.pop(i) # everything but the character and background disappears when it is caught
                 # print(item_caught)
                 
-                if item_caught == self.clothes[i]:
-                    failling_clothes.legend.pop(i)
+                # if item_caught == level2.falling_clothes[i]:
+                #     failling_clothes.legend.pop(i)
         
     def distance(self, other):
         return ((mouseX - other.x)**2 + (self.y - other.y)**2)**0.5
+    
+    # def __eq__(self, other):
+        # return
         
     def display(self):
         self.catch()
@@ -55,22 +58,16 @@ class Clothes():
         for i in range(15):
             self.clothes.append(loadImage(path + "/images/clothes" + str(i) + ".png"))
         
-        # Randomizes again after catching an item :((
+        # Randomizes again after catching an item :(( I tried moving the legend to the game class but it didn't really work
         self.legend = [self.clothes[self.rand_hat], self.clothes[self.rand_jacket], self.clothes[self.rand_pant], self.clothes[self.rand_shoe], self.clothes[self.rand_shirt]]
         
     def update(self):
         self.y += self.vy  
         
-    # def __str__(self):
-    #     for i in range(len(level2.falling_clothes)-1, -1, -1):
-    #         return 
-        
-    # def __eq__(self, other):
-    #     for i in range(len(level2.falling_clothes)-1, -1, -1):
-    #         if self.clothes[i] == other.clothes[i]:
-    #             return True;
-    #        else:
-    #            return False;     
+    # We have to somehow figure out how to compare the object caught with the legend image. I was thinking of using __eq__ since it's comparing the instance of the object, but idk if this will work
+    def __eq__(self, other):
+        for i in range(len(level2.falling_clothes)-1, -1, -1):
+            return self.clothes[i] == level2.falling_clothes[i]   
         
     def display(self):
         self.update()
@@ -78,7 +75,8 @@ class Clothes():
         image(self.clothes[self.rand_index], self.x, self.y, self.w, self.h)
         # noFill()
         # ellipse(self.x, self.y, self.w, self.h)
-
+        
+        # Create Legend
         noStroke()
         fill(255, 0, 0)
         rect(0, 0, width, 120)
@@ -94,6 +92,8 @@ class Clothes():
         image(self.legend[2], 700, 80, self.w, self.h)
         image(self.legend[3], 540, 150, self.w, self.h)
         image(self.legend[4], 620, 150, self.w, self.h)
+
+        
         
 class Level2:
     def __init__(self):
@@ -101,7 +101,7 @@ class Level2:
         self.person = Person(RESOLUTION_H - 120)
         self.falling_clothes = []
         self.falling_clothes.append(Clothes(70, 70, 35))
-    
+
     def display(self):
         push()
         tint(255, 70)
