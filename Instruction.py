@@ -7,6 +7,7 @@ class Landpage():
         self.content = "You have a crush\n Let's ask them out on a date.\n \n Challenge 1: Pick Up Line\n Collect all items in the index \n and avoid the rest! "
         self.button = "Start"
     def display(self):
+        imageMode(CORNERS)
         image(self.bgImage, 0,0,RESOLUTION_W ,RESOLUTION_H)
         noStroke()
         fill(255, 255, 255, 225)
@@ -34,21 +35,21 @@ class afterOnePage(Landpage):
         self.button = "Start"
         
 class afterTwoPage(Landpage):
-    def __init__(self,):
+    def __init__(self):
         self.bgImage = loadImage(path+"images/aftertwo.jpg")
         self.header = "Fine Dining"
         self.content = "Congratulations!\n You completed challenge 2\n \n Challenge 3: Fine Dining\n Collect all items in the index \n and avoid the rest! "
         self.button = "Start"
         
 class winPage(Landpage):
-    def __init__(self,):
+    def __init__(self):
         self.bgImage = loadImage(path+"images/win.jpg")
         self.header = "You Won"
         self.content = "Congratulations!\n The Date was Successful!\n \n Maybe a second date?\n Schedule a second date\n and good luck! "
         self.button = "Again"
         
 class loosePage(Landpage):
-    def __init__(self,):
+    def __init__(self):
         self.bgImage = loadImage(path+"images/loose.jpg")
         self.header = "You Lost"
         self.content = "I am sorry :-( \n It didn't go well \n \n Don't be sad \n There is always a 2nd chance! \n Try again. "
