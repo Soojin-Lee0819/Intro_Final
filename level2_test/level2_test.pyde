@@ -16,11 +16,13 @@ class Person():
     def catch(self):
         for i in range(len(level2.item)-1, -1, -1):
             if self.distance(level2.item[i]) < self.r + level2.item[i].r:
-                item_caught = level2.item.pop(i)
                 # print(item_caught, level2.legend.item)
+                #print(level2.item[i].rand_index, level2.legend.legend_index)
+                item_caught = level2.item.pop(i)
                 
-                if item_caught in level2.legend.item:
-                    self.legend.remove_item(item)
+                if item_caught.rand_index in level2.legend.legend_index:
+                    print(type(item_caught.rand_index))
+                    level2.legend.remove_item(item_caught.rand_index)
         
     def distance(self, other):
         return ((mouseX - other.x)**2 + (self.y - other.y)**2)**0.5
@@ -36,21 +38,25 @@ class Person():
         # ellipse(mouseX, self.y, self.w, self.h)
         
 class Clothes():
-    def __init__(self, w, h, r):
+    def __init__(self, w, h, r, rand_index):
         self.w = w
         self.h = h
         self.r = r
         self.x = random.randint(50, RESOLUTION_W - 50)
         self.y = 10
         self.vy = random.randint(4, 10)
-        self.rand_index = random.randint(0, 14)
+        self.rand_index = rand_index
     
-        self.clothes = []
+        global clothes
+        clothes = []
         for i in range(15):
-            self.clothes.append(loadImage(path + "/images/clothes" + str(i) + ".png"))
+            clothes.append(loadImage(path + "/images/clothes" + str(i) + ".png"))
         
     def update(self):
         self.y += self.vy  
+        
+    def __str__(self):
+        return {self.rand_index}
         
     # def __eq__(self, other):
         # for i in range(len(level2.item)-1, -1, -1):
@@ -59,16 +65,16 @@ class Clothes():
     def display(self):
         self.update()
         
-        image(self.clothes[self.rand_index], self.x, self.y, self.w, self.h)
+        image(clothes[self.rand_index], self.x, self.y, self.w, self.h)
         # noFill()
         # ellipse(self.x, self.y, self.w, self.h)
         
 
 class Legend():
     def __init__(self, legend_x, legend_y, w, h, level_number, c):
-        self.item = []
-        for i in range(15):
-            self.item.append(loadImage(path + "/images/clothes" + str(i) + ".png")) # Might have to append different items based on level (use if?)
+        # self.item = []
+        # for i in range(15):
+        #     self.item.append(loadImage(path + "/images/clothes" + str(i) + ".png")) # Might have to append different items based on level (use if?)
             
         # possibility for items in legend
         # since there are 5 different items and 3 of each in the list of all the items, this will randomly pick and display
@@ -79,20 +85,27 @@ class Legend():
         self.rand_item4 = random.randint(12, 14)
         
         # Legend variables
-        self.legend = [self.item[self.rand_item0], self.item[self.rand_item1], self.item[self.rand_item2], self.item[self.rand_item3], self.item[self.rand_item4]]
+        self.legend = [clothes[self.rand_item0], clothes[self.rand_item1], clothes[self.rand_item2], clothes[self.rand_item3], clothes[self.rand_item4]]
+        self.legend_index = [self.rand_item0, self.rand_item1, self.rand_item2, self.rand_item3, self.rand_item4]
         self.legend_x = legend_x
         self.legend_y = legend_y
         self.w = w
         self.h = h
         self.level_number = level_number
         self.legend_color = c
-        
+
     def __eq__(self, other):
         for item in self.legend:
             return item == other.item
         
-    def remove_item(self, item):
-        self.item.pop(item)
+    def remove_item(self, indexItem):
+        item_index = self.legend_index.index(indexItem)
+        self.legend.pop(item_index)
+        self.legend_index.pop(item_index)
+        print("item reexmoved")
+        print(self.legend_index)
+        print(self.legend)
+
         
     def display(self):
         noStroke()
@@ -117,7 +130,7 @@ class Legend():
         # image(self.legend[4], self.legend_x+80, self.legend_y+70, self.w, self.h)
         
         # Progress Bar/legend
-        for i in range(5):
+        for i in range(len(self.legend)):
             image(self.legend[i], self.legend_x + (i*100), self.legend_y, self.w, self.h)
         
 class Level2():
@@ -125,7 +138,7 @@ class Level2():
         self.bkg_img = loadImage(path + "/images/closet.jpg")
         self.person = Person(RESOLUTION_H - 120)
         self.item = []
-        self.item.append(Clothes(70, 70, 35))
+        self.item.append(Clothes(70, 70, 35, random.randint(0, 14)))
         self.legend = Legend(210, 100, 70, 70, 2, "#da7344")
 
     def display(self):
@@ -145,12 +158,11 @@ class Level2():
                         
         # Add new clothes item for every 100th or 60th frame
         if frameCount % 100 == 0:
-            self.item.append(Clothes(70, 70, 35))
+            self.item.append(Clothes(70, 70, 35, random.randint(0, 14)))
         elif frameCount % 60 == 0:
-            self.item.append(Clothes(70, 70, 35))
+            self.item.append(Clothes(70, 70, 35, random.randint(0, 14)))
         
         self.legend.display()
-
 
 def setup():
     size(RESOLUTION_W, RESOLUTION_H)
@@ -159,6 +171,5 @@ level2 = Level2()
 
 def draw():
     background(220)
-    
+     
     level2.display()
-    
