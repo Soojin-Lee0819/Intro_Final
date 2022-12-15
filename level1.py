@@ -67,5 +67,4 @@ class Level1(Level2):
         
         self.legend.display()
         return(loose) 
-
-level1 = Level1("bedroom.jpg")                     
+                   

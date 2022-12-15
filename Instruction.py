@@ -56,7 +56,7 @@ class loosePage(Landpage):
         self.button = "Restart"
 
 landpage = Landpage()
-afterone = afterOnePage()
-aftertwo = afterTwoPage()
-winpage = winPage()
+pagetwo = afterOnePage()
+pagethree = afterTwoPage()
+winpg = winPage()
 loosepage = loosePage()
