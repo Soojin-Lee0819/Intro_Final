@@ -2,10 +2,11 @@ from const import *
 from Instruction import *
 from level2 import *
 from level3 import *
+from level1 import *
 
 landingpage = True
 twopage = False
-
+onepage = False
 threepage = False
 pagethree = False
 
@@ -19,29 +20,28 @@ def draw():
     global twopage
     global threepage
     global endpage
+    global onepage
     update(mouseX, mouseY)
     if landingpage is True:
         landpage.display()
         
-    elif twopage is True:
+    elif onepage is True:
         background(220)
-        loose = level2.display()
+        loose = level1.display()
         if loose == 1:
-            twopage = False
+            print("page one lost")
+            onepage = False
             endpage = True
         
         elif loose == 2:
-            twopage = False
-            threepage = True
-            print("page two win")
+            onepage = False
+            twopage = True
+            print("page one win")
             
-    elif pagethree is True:
-        background(220)
-        loose = level3.display()
-    
 
     elif threepage is True:
         aftertwo.display()
+        
 
     elif endpage is True:
         loosepage.display()
@@ -66,7 +66,7 @@ def mousePressed():  #If mouse is clicked, then restart the game
 
     if landingpage is True and buttonPressed is True:
         landingpage = False
-        twopage = True
+        onepage = True
 
     elif endpage is True and buttonPressed is True:
        endpage = False

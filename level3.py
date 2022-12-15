@@ -51,7 +51,7 @@ class Level3(Level2):
         tint(255, 70)
         image(self.bkg_img, width/2, height/2, 1200, 900)
         pop()
-        self.person.display()
+        loose = self.person.display()
         
         # Iterate backwards through the list so that the clothes will continue to fall
         for i in range(len(self.item2)-1, -1, -1):
@@ -69,5 +69,6 @@ class Level3(Level2):
             self.item2.append(Food(70, 70, 35, 7, random.randint(0, 14)))
         
         self.legend.display() 
+        return(loose) 
                    
 level3 = Level3("restaurant.jpg") 
