@@ -19,8 +19,11 @@ class Person():
                 item_caught = level2.item.pop(i)
                 # print(item_caught, level2.legend.item)
                 
-                if item_caught in level2.legend.item:
-                    self.legend.remove_item(item_caught)
+                print(level2.item[i].rand_index, level2.legend.legend_index)
+                
+                # if level2.item[i].rand_index in level2.legend.legend_index:
+                #     # level2.legend.remove_item(item_caught)
+                #     print("Item removed")
         
     def distance(self, other):
         return ((mouseX - other.x)**2 + (self.y - other.y)**2)**0.5
@@ -84,6 +87,7 @@ class Legend():
         
         # Legend variables
         self.legend = [clothes[self.rand_item0], clothes[self.rand_item1], clothes[self.rand_item2], clothes[self.rand_item3], clothes[self.rand_item4]]
+        self.legend_index = [self.rand_item0, self.rand_item1, self.rand_item2, self.rand_item3, self.rand_item4]
         self.legend_x = legend_x
         self.legend_y = legend_y
         self.w = w
@@ -95,8 +99,9 @@ class Legend():
         for item in self.legend:
             return item == other.item
         
-    def remove_item(self, item):
-        self.item.pop(item)
+    def remove_item(self):
+        # self.item.pop(item)
+        print("item removed")
         
     def display(self):
         noStroke()
@@ -154,7 +159,6 @@ class Level2():
             self.item.append(Clothes(70, 70, 35, random.randint(0, 14)))
         
         self.legend.display()
-        print(self.item)
 
 def setup():
     size(RESOLUTION_W, RESOLUTION_H)
