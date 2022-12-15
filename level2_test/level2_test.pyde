@@ -23,6 +23,9 @@ class Person():
                 if item_caught.rand_index in level2.legend.legend_index:
                     print(type(item_caught.rand_index))
                     level2.legend.remove_item(item_caught.rand_index)
+                
+                else:
+                    print("end")
         
     def distance(self, other):
         return ((mouseX - other.x)**2 + (self.y - other.y)**2)**0.5
@@ -105,6 +108,10 @@ class Legend():
         print("item reexmoved")
         print(self.legend_index)
         print(self.legend)
+        
+                
+        if len(self.legend) is 0:
+            print("win")
 
         
     def display(self):
