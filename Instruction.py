@@ -42,14 +42,14 @@ class afterOnePage(Landpage):
     def __init__(self,):
         self.bgImage = loadImage(path+"images/afterone.jpg")
         self.header = "Wear Cute Outfit"
-        self.content = "Congratulations!\n You completed challenge 1\n \n Challenge 2: Wear cute outfit\n Collect all items in the index \n and avoid the rest! "
+        self.content = "Congratulations!\n You completed challenge 1\n \n Challenge 2: Wear cute outfit\n Use MOUSE to move. Collect items\n in the legend and avoid the rest! "
         self.button = "Start"
         
 class afterTwoPage(Landpage):
     def __init__(self):
         self.bgImage = loadImage(path+"images/aftertwo.jpg")
         self.header = "Fine Dining"
-        self.content = "Congratulations!\n You completed challenge 2\n \n Challenge 3: Fine Dining\n Collect all items in the index \n and avoid the rest! "
+        self.content = "Congratulations!\n You completed challenge 2\n \n Challenge 3: Fine Dining\n Use MOUSE to move. Collect items\n in the legend and avoid the rest! "
         self.button = "Start"
         
 class winPage(Landpage):

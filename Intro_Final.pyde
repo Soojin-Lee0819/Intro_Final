@@ -35,9 +35,14 @@ bkg_sound = player.loadFile(path + "/sounds/bkg_sound.mp3")
 win_sound = player.loadFile(path + "/sounds/win_sound.mp3")
 catch_sound = player.loadFile(path + "/sounds/catch_sound.mp3")
 
+# This class creates the legend with the items needed to be collected in each level
+# Each level class calls the legend with a different argument for the img, level_number, and color
 class Legend():
+    
     def __init__(self, img, legend_x, legend_y, w, h, level_number, c):    
-       
+        
+        # There 5 images being displayed in the legend but 3 possible images in each of the 5.
+        # So we sectioned it and created random numbers for each of the 5 to ensure there's no overlapping images in the legend
         self.rand_item0 = random.randint(0,2)
         self.rand_item1 = random.randint(3, 5)
         self.rand_item2 = random.randint(6, 8)
@@ -55,12 +60,17 @@ class Legend():
         self.level_number = level_number
         self.legend_color = c
         
-    def remove_item(self, indexItem):
-        item_index = self.legend_index.index(indexItem)
+    # This method removes the item from the legend so the player can see their progress in the game
+    # It also removes it from the legend_index, which we use to check if the item caught is the same as the legend
+    def remove_item(self, item):
+        # Since legend index is not the same as the list of items falling down, we use .index to find the element in the legend
+        item_index = self.legend_index.index(item)
        
+        # Then we use that number to pop the element in the legend and legend index
         self.legend.pop(item_index)
         self.legend_index.pop(item_index)
         
+        # If the length of the legend list is 0, we move onto the next level b/c the player completed that level
         if len(self.legend) == 0:
             lose = 2
             return (lose)
@@ -80,10 +90,14 @@ class Legend():
         pop()
 
         # Progress Bar/legend
-        for i in range(len(self.legend)):
+        for i in range(len(self.legend)): # Make sure to use len(self.legend) so 
             image(self.legend[i], self.legend_x + (i*100), self.legend_y, self.w, self.h)
 
-#All About Level 1 
+
+# The next three classes are used for level 1: 
+# 1) Person class is for the character on the screen that catches the items falling down 
+# 2) Texting class creates one of the items falling on the screen
+# 3) Level class creates the object for Person and Texting and is in charge of displaying the overall mechanics of level 1, such as multiple items falling
 class Person():
     
     def __init__(self, y,img):
@@ -93,22 +107,29 @@ class Person():
         self.r = self.w/4
         self.img = loadImage(path + "/images/"+img)
     
+    # This method is used to catch any item falling on the screen
     def catch(self):
+        
+        # For loop goes backwards since we're popping elements out of the list
         for i in range(len(level1.texts)-1, -1, -1):
-            
+            # Checks if the distance is less than the radius of the item and character
             if self.distance(level1.texts[i]) < self.r + level1.texts[i].r:
-                item_caught = level1.texts.pop(i)
+                item_caught = level1.texts.pop(i) 
                     
+                # If the index of the item caught matches the index of the legend item, it plays a sound and goes to the method in the legend
                 if item_caught.rand_index in level1.legend.legend_index:
                     catch_sound.rewind()
                     catch_sound.play()
                     lose = level1.legend.remove_item(item_caught.rand_index)
-                    return(lose)
-                    
+                    return lose
+               
+                # If the item caught is not in the legend, you lose 
                 else:
                     lose = 1
-                    return(lose)
-        
+                    return lose
+     
+     # Used to check the distance between the character's x (which follows the mouse X position) and other which is the item's x
+     # Distance formula 
     def distance(self, other):
         return ((mouseX - other.x)**2 + (self.y - other.y)**2)**0.5
         
@@ -117,8 +138,9 @@ class Person():
         imageMode(CENTER)
         image(self.img, mouseX, self.y, self.w, self.h)
     
-        return(lose)
-        
+        return lose
+
+# Class for the item falling in level 1 (emojis)
 class Texting():
 
     def __init__(self, w, h, r,vy, rand_index):
@@ -126,10 +148,11 @@ class Texting():
         self.h = h
         self.r = r
         self.vy = vy
-        self.x = random.randint(50, RESOLUTION_W - 50)
+        self.x = random.randrange(50, RESOLUTION_W - 50, 80) # Used randrange instead of randint so it's more uniform when falling
         self.y = 10
         self.rand_index = rand_index
     
+        # Globalized texts so legend is sharing the same list; makes it easier for checking if the item caught is the same as the item in the legend
         global texts
         texts = []
         for i in range(15):
@@ -137,24 +160,19 @@ class Texting():
         
     def update(self):
         self.y += self.vy  
-        
-    def __str__(self):
-        return {self.rand_index}
-        
 
     def display(self):
         self.update()
         
         image(texts[self.rand_index], self.x, self.y, self.w, self.h)
         
-
+# Class used to display everything and create instance of the legend and item falling
 class Level1():
-    
     def __init__(self,img):
         self.bkg_img = loadImage(path + "/images/"+img)
         self.person = Person(RESOLUTION_H - 120, "character0.png")
         self.texts = []
-        self.texts.append(Texting(70, 70, 35, 4, random.randint(0, 14)))
+        self.texts.append(Texting(70, 70, 35, 10, random.randint(0, 14)))
         self.legend = Legend(texts, 210, 100, 70, 70, 1, "#F57CB6")
         bkg_sound.loop()
 
@@ -165,7 +183,7 @@ class Level1():
         pop()
         lose = self.person.display()
         
-        # Iterate backwards through the list so that the clothes will continue to fall
+        # Again we have to iterate through the list backwards because we are removing elements from it
         for i in range(len(self.texts)-1, -1, -1):
             self.texts[i].display()
             
@@ -173,17 +191,17 @@ class Level1():
             if self.texts[i].y > height + self.texts[i].r:
                 self.texts.pop(i)
                         
-        # Add new texts item for every 40th frame
-        if frameCount % 40 == 0:
-            self.texts.append(Texting(70, 70, 35, 4, random.randint(0, 14)))
-            print(frameCount)
-        
+        # Add new texts item for every 39th frame
+        if frameCount % 39 == 0:
+            self.texts.append(Texting(70, 70, 35, 10, random.randint(0, 14)))
+
         self.legend.display()
         
         return(lose) 
     
     
-# All About Level 2 
+# The next three classes relate to level 2
+# Person2 inherits from Person. We couldn't use the same person class since we are checking a different level's item 
 class Person2(Person):
     
     def __init__(self, y, img):
@@ -204,6 +222,7 @@ class Person2(Person):
                         print("lost")
                         return(lose)
 
+# Clothes inherits from Texting, only thing different is the displayed image and the list of items
 class Clothes(Texting):
     def __init__(self, w, h, r, vy, rand_index):
         Texting.__init__(self, w, h, r, vy, rand_index)
@@ -217,14 +236,15 @@ class Clothes(Texting):
         self.update()
         image(clothes[self.rand_index], self.x, self.y, self.w, self.h)
 
+
+# Level 2 inherits from Level 1, the display is different as it is showing a different character and items falling
 class Level2(Level1):
     def __init__(self, img):
         Level1.__init__(self, img)
-        # self.bkg_img = loadImage(path + "/images/" + img)
         self.person = Person2(RESOLUTION_H - 120, "character1.png")
         self.clothes = []
-        self.clothes.append(Clothes(70, 70, 35, 7, random.randint(0, 14)))
-        self.legend = Legend(clothes, 210, 100, 70, 70, 2, "#da7344")
+        self.clothes.append(Clothes(70, 70, 35, 13, random.randint(0, 14))) # increase speed of the items falling (13)
+        self.legend = Legend(clothes, 210, 100, 70, 70, 2, "#da7344") # Change the img, level_number, and color argument to match level 2
         
     def display(self):
         push()
@@ -233,23 +253,21 @@ class Level2(Level1):
         pop()
         lose = self.person.display()
         
-        # Iterate backwards through the list so that the clothes will continue to fall
         for i in range(len(self.clothes)-1, -1, -1):
             self.clothes[i].display()
-            
-            # Make sure to remove any items in the list that were not caught so that the list doesn't continue growing
+    
             if self.clothes[i].y > height + self.clothes[i].r:
                 self.clothes.pop(i)
                         
-        # Add new clothes item for every 100th or 60th frame
-        if frameCount % 40 == 0:
-            self.clothes.append(Clothes(70, 70, 35, 7, random.randint(0, 14)))
-                
+        # Add new clothes item every 21 frames; changing the frame count makes the items appear more frequently
+        if frameCount % 21 == 0:
+            self.clothes.append(Clothes(70, 70, 35, 13, random.randint(0, 14)))
         
         self.legend.display()
-        return(lose) 
+        return lose
             
-#LEVEL 3 GAME PAGE
+# The next three classes relate to Level 3
+# It is basically the same cases as level 2, we had to change the list of images and the checking for the item caught
 class Person3(Person):
     def __init__(self,y, img):
         Person.__init__(self,y,img)
@@ -287,10 +305,9 @@ class Food(Texting):
 class Level3(Level1):
     def __init__(self, img):
         Level1.__init__(self, img)
-        # self.bkg_img = loadImage(path + "/images/" + img)
         self.person = Person3(RESOLUTION_H - 120, "character2.png")
         self.foods = []
-        self.foods.append(Food(70, 70, 35, 10, random.randint(0, 14)))
+        self.foods.append(Food(70, 70, 35, 15, random.randint(0, 14))) # Also increased the speed 
         self.legend = Legend(foods, 210, 100, 70, 70, 3, "#9285E1")
         
         
@@ -301,18 +318,15 @@ class Level3(Level1):
         pop()
         lose = self.person.display()
         
-        # Iterate backwards through the list so that the clothes will continue to fall
         for i in range(len(self.foods)-1, -1, -1):
             self.foods[i].display()
-            
-            # Make sure to remove any items in the list that were not caught so that the list doesn't continue growing
+        
             if self.foods[i].y > height + self.foods[i].r:
                 self.foods.pop(i)
                         
-        # Add new clothes item for every 100th or 60th frame
-        if frameCount % 30 == 0:
-            self.foods.append(Food(70, 70, 35, 10, random.randint(0, 14)))
-                
+        # Add new clothes item for every 13 frames
+        if frameCount % 13 == 0:
+            self.foods.append(Food(70, 70, 35, 15, random.randint(0, 14)))        
         
         self.legend.display() 
         return(lose) 
