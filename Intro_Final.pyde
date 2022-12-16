@@ -1,3 +1,8 @@
+#Title: The Date Night
+#By Vivianna Mo and Soojin Lee
+#Professor: Thomas Potsch
+# 16/Dec/2022
+
 from Instruction import *
 import os,random
 add_library('minim')
