@@ -163,7 +163,7 @@ class Texting():
 
     def display(self):
         self.update()
-        
+
         image(texts[self.rand_index], self.x, self.y, self.w, self.h)
         
 # Class used to display everything and create instance of the legend and item falling
@@ -172,7 +172,7 @@ class Level1():
         self.bkg_img = loadImage(path + "/images/"+img)
         self.person = Person(RESOLUTION_H - 120, "character0.png")
         self.texts = []
-        self.texts.append(Texting(70, 70, 35, 10, random.randint(0, 14)))
+        self.texts.append(Texting(70, 70, 35, 10, random.randint(0, 14))) # Since it is calling a random index, sometimes multiple of the same one shows up or one doesn't show up for a long time
         self.legend = Legend(texts, 210, 100, 70, 70, 1, "#F57CB6")
         bkg_sound.loop()
 
@@ -192,7 +192,7 @@ class Level1():
                 self.texts.pop(i)
                         
         # Add new texts item for every 39th frame
-        if frameCount % 39 == 0:
+        if frameCount % 33 == 0:
             self.texts.append(Texting(70, 70, 35, 10, random.randint(0, 14)))
 
         self.legend.display()
